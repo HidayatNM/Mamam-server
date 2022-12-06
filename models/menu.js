@@ -1,7 +1,5 @@
-'use strict';
-const {
-  Model
-} = require('sequelize');
+"use strict";
+const { Model } = require("sequelize");
 module.exports = (sequelize, DataTypes) => {
   class Menu extends Model {
     /**
@@ -10,20 +8,36 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      // define association here
+      Menu.belongsTo(models.Category, { foreignKey: "categoryId" });
+      Menu.belongsTo(models.Merchant, { foreignKey: "merchantId" });
     }
   }
-  Menu.init({
-    name: DataTypes.STRING,
-    description: DataTypes.STRING,
-    price: DataTypes.INTEGER,
-    isAvail: DataTypes.STRING,
-    imgUrl: DataTypes.STRING,
-    categoryId: DataTypes.INTEGER,
-    merchantId: DataTypes.INTEGER
-  }, {
-    sequelize,
-    modelName: 'Menu',
-  });
+  Menu.init(
+    {
+      name: DataTypes.STRING,
+      description: DataTypes.STRING,
+      price: DataTypes.INTEGER,
+      isAvail: DataTypes.STRING,
+      imgUrl: DataTypes.STRING,
+      categoryId: {
+        type: DataTypes.INTEGER,
+        references: {
+          model: "Categories",
+          key: "id",
+        },
+      },
+      merchantId: {
+        type: DataTypes.INTEGER,
+        references: {
+          model: "Merchants",
+          key: "id",
+        },
+      },
+    },
+    {
+      sequelize,
+      modelName: "Menu",
+    }
+  );
   return Menu;
 };

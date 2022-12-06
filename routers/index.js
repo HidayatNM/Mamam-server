@@ -6,6 +6,5 @@ const authentication = require("../middlewares/authentication");
 router.use("/", MerchantRouter);
 router.use(authentication);
 router.use("/menus", MenuRouter);
-// router.use("/categories");
 
 module.exports = router;
