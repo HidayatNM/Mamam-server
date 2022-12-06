@@ -20,7 +20,7 @@ function errorHandler(err, req, res, next) {
       statusCode = 403;
       message = "Forbidden Error";
       break;
-    case "NOT_FOUND":
+    case "Not found":
       statusCode = 404;
       message = "Data not found";
       break;
