@@ -8,8 +8,7 @@ function errorHandler(err, req, res, next) {
       statusCode = 400;
       message = err.errors.map((el) => el.message);
       break;
-    case "invalid_credentials":
-    case "Invalid_credentials":
+    case "Invalid credentials":
       statusCode = 400;
       message = "Email or password invalid";
       break;
