@@ -1,6 +1,6 @@
 const { comparePass, hashPassword } = require("../helpers/bcrypt");
 const { createToken } = require("../helpers/jwt");
-const { Merchant } = require("../models/index");
+const { Merchant, Menu, Category } = require("../models/index");
 
 class MerchantController {
   static async register(req, res, next) {
@@ -57,6 +57,38 @@ class MerchantController {
 
       res.status(200).json({ access_token, foundMerchant });
     } catch (err) {
+      next(err);
+    }
+  }
+
+  static async getMerchantByName(req, res, next) {
+    try {
+      const { name } = req.params;
+
+      const foundMerchant = await Merchant.findOne({
+        where: {
+          name: name
+            .split("-")
+            .map((name) => name[0].toUpperCase() + name.substring(1))
+            .join(" "),
+        },
+      });
+
+      const merchantId = foundMerchant.id;
+      const data = await Category.findAll({
+        include: {
+          model: Menu,
+          where: {
+            merchantId,
+          },
+        },
+      });
+      delete foundMerchant.dataValues.email;
+      delete foundMerchant.dataValues.password;
+
+      res.status(200).json({ Merchant: foundMerchant, Category: data });
+    } catch (err) {
+      console.log(err);
       next(err);
     }
   }
