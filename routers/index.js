@@ -1,8 +1,10 @@
 const router = require("express").Router();
-const merchantRouter = require("./merchantRouter");
+const MerchantRouter = require("./merchantRouter");
+const MenuRouter = require("./menuRouter");
+const authentication = require("../middlewares/authentication");
 
-router.use("/", merchantRouter);
-// router.use("/menus");
-// router.use("/categories");
+router.use("/", MerchantRouter);
+router.use(authentication);
+router.use("/menus", MenuRouter);
 
 module.exports = router;

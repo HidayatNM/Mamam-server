@@ -8,8 +8,7 @@ function errorHandler(err, req, res, next) {
       statusCode = 400;
       message = err.errors.map((el) => el.message);
       break;
-    case "invalid_credentials":
-    case "Invalid_credentials":
+    case "Invalid credentials":
       statusCode = 400;
       message = "Email or password invalid";
       break;
@@ -21,7 +20,7 @@ function errorHandler(err, req, res, next) {
       statusCode = 403;
       message = "Forbidden Error";
       break;
-    case "NOT_FOUND":
+    case "Not found":
       statusCode = 404;
       message = "Data not found";
       break;
