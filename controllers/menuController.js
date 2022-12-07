@@ -29,8 +29,16 @@ class MenuController {
     try {
       const { id } = req.user;
       const menus = await Menu.findAll({ where: { merchantId: id } });
+      const data = await Category.findAll({
+        include: {
+          model: Menu,
+          where: {
+            merchantId: id,
+          },
+        },
+      });
 
-      res.status(200).json({ menus });
+      res.status(200).json({ menus, data });
     } catch (err) {
       next(err);
     }
