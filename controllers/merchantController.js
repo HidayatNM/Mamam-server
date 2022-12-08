@@ -1,6 +1,7 @@
 const { comparePass, hashPassword } = require("../helpers/bcrypt");
 const { createToken } = require("../helpers/jwt");
 const { Merchant, Menu, Category } = require("../models/index");
+const sendEmail = require("../helpers/nodemailer");
 
 class MerchantController {
   static async register(req, res, next) {
@@ -25,7 +26,9 @@ class MerchantController {
         openHour,
         closeHour,
       });
+
       if (createMerchant) {
+        sendEmail(email);
         res.status(201).json({
           message: `Merchant with name ${createMerchant.name} has been created`,
         });
