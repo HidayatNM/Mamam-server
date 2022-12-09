@@ -64,6 +64,38 @@ class MerchantController {
     }
   }
 
+  static async getListMerchant(req, res, next) {
+    try {
+      const listMerchant = await Merchant.findAll();
+
+      res.status(200).json({ listMerchant });
+    } catch (err) {
+      next(err);
+      console.log(err);
+    }
+  }
+
+  static async getMerchantMenu(req, res, next) {
+    try {
+      const { id } = req.params;
+      const merchantId = id;
+
+      const data = await Category.findAll({
+        include: {
+          model: Menu,
+          where: {
+            merchantId,
+          },
+        },
+      });
+
+      res.status(200).json({ CategoryMenu: data });
+    } catch (err) {
+      next(err);
+      console.log(err);
+    }
+  }
+
   static async getMerchantByName(req, res, next) {
     try {
       const { name } = req.params;

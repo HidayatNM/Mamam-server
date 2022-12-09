@@ -4,7 +4,7 @@ const MenuRouter = require("./menuRouter");
 const TransactionRouter = require("./transactionRouter");
 const authentication = require("../middlewares/authentication");
 
-router.use("/", MerchantRouter);
+router.use("/merchants", MerchantRouter);
 router.use("/transactions", TransactionRouter);
 router.use(authentication);
 router.use("/menus", MenuRouter);
