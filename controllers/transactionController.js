@@ -5,6 +5,8 @@ const {
   Menu,
 } = require("../models/index");
 
+const midtransClient = require("midtrans-client");
+
 class TransactionController {
   static async addOrder(req, res, next) {
     try {
@@ -42,7 +44,7 @@ class TransactionController {
       }
 
       const dataTrax = await Transaction.create({
-        merchantId: foundMerchant.id,
+        merchantId: id,
         name,
         email,
         address,
@@ -51,10 +53,43 @@ class TransactionController {
 
       res.status(201).json({
         message: "Transaction successfully",
+        email: dataTrax.email,
       });
     } catch (err) {
       console.log(err);
       next(err);
+    }
+  }
+
+  static async midtransToken(req, res, next) {
+    try {
+      const { email, gross_amount } = req.body;
+      console.log(email, gross_amount);
+
+      let snap = new midtransClient.Snap({
+        // Set to true if you want Production Environment (accept real transaction).
+        serverKey: "SB-Mid-server-koVIILNFoaXlrshKNe8179ED",
+      });
+
+      let parameter = {
+        transaction_details: {
+          order_id:
+            "YOUR-ORDERID-" + Math.floor(1000000 + Math.random() * 9000000),
+          gross_amount,
+        },
+        credit_card: {
+          secure: true,
+        },
+        customer_details: {
+          email,
+        },
+      };
+
+      const midtransToken = await snap.createTransaction(parameter);
+      res.status(200).json(midtransToken);
+    } catch (error) {
+      console.log(error);
+      next(error);
     }
   }
 }

@@ -3,9 +3,12 @@ const { Menu, Category, Merchant } = require("../models/index");
 class MenuController {
   static async createMenu(req, res, next) {
     try {
-      const { name, description, price, imgUrl, categoryId } = req.body;
+      const { name, description, price, imgUrl, categoryid } = req.body;
+      console.log(req.body);
+      const id = categoryid;
       const isAvail = "available";
       const merchantId = req.user.id;
+      console.log(merchantId);
 
       await Menu.create({
         name,
@@ -13,7 +16,7 @@ class MenuController {
         price,
         isAvail,
         imgUrl,
-        categoryId,
+        categoryId: id,
         merchantId,
       });
 
@@ -21,6 +24,7 @@ class MenuController {
         message: "Menu created successfully",
       });
     } catch (err) {
+      console.log(err);
       next(err);
     }
   }

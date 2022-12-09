@@ -1,6 +1,7 @@
 const { comparePass, hashPassword } = require("../helpers/bcrypt");
 const { createToken } = require("../helpers/jwt");
 const { Merchant, Menu, Category } = require("../models/index");
+const sendEmail = require("../helpers/nodemailer");
 
 class MerchantController {
   static async register(req, res, next) {
@@ -25,7 +26,9 @@ class MerchantController {
         openHour,
         closeHour,
       });
+
       if (createMerchant) {
+        sendEmail(email);
         res.status(201).json({
           message: `Merchant with name ${createMerchant.name} has been created`,
         });
@@ -58,6 +61,38 @@ class MerchantController {
       res.status(200).json({ access_token, foundMerchant });
     } catch (err) {
       next(err);
+    }
+  }
+
+  static async getListMerchant(req, res, next) {
+    try {
+      const listMerchant = await Merchant.findAll();
+
+      res.status(200).json({ listMerchant });
+    } catch (err) {
+      next(err);
+      console.log(err);
+    }
+  }
+
+  static async getMerchantMenu(req, res, next) {
+    try {
+      const { id } = req.params;
+      const merchantId = id;
+
+      const data = await Category.findAll({
+        include: {
+          model: Menu,
+          where: {
+            merchantId,
+          },
+        },
+      });
+
+      res.status(200).json({ CategoryMenu: data });
+    } catch (err) {
+      next(err);
+      console.log(err);
     }
   }
 
